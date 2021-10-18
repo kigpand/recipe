@@ -23,9 +23,9 @@ const Category = ({ categoryList, onRecipeState }) =>{
 
     return(
         <CategoryWrapper>
-            { categoryList.map((category)=>{
+            { categoryList.map((category, i)=>{
                 return (
-                    <div>
+                    <div key={i}>
                         <div className="categoryTitle">{category.categoryTitle}</div>
                         {category.categoryArray.map((list)=>{
                             return <ListItem key={list.id} list={list} onRecipeState={onRecipeState}/>

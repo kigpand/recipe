@@ -5,6 +5,7 @@ import TIMEICON from '../imgs/time.png';
 import KCALICON from '../imgs/kcal.png';
 import SERVINGICON from '../imgs/serving.png';
 import PICKICON from '../imgs/check_full.png';
+import LoadingSpinner from './LoadingSpinner';
 
 const RecipyWrapper = styled.div`
 
@@ -91,6 +92,26 @@ const RecipyWrapper = styled.div`
             }
         }
     }
+
+    @media screen and (max-width:1023px) {
+    }
+        
+    @media screen and (max-width:767px) {
+        .recipyMain{
+            .img{
+                width: 100%;
+                height: 300px;
+            }
+
+            .info{
+                width: 100%;
+            }
+
+            .recipySub{
+                width: 100%;
+            }
+        }
+    }
 `;
 const Recipy = ({ id }) =>{
 
@@ -114,7 +135,7 @@ const Recipy = ({ id }) =>{
     return (
         <RecipyWrapper>
             { loading 
-            ? <div>로딩중</div>
+            ? <LoadingSpinner />
             : <div className="recipyMain">
                 <img src={recipy.picture} alt="사진" className="img" />
                 <div className="info">

@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Category from './Category';
+import LoadingSpinner from './LoadingSpinner';
 import MenuList from './MenuList';
 import Recipy from './Recipy';
 
@@ -71,6 +72,7 @@ const Menu = () =>{
         return a.name < b.name ? -1 : (a.name === b.name) ? 0 : 1;
     }
 
+    // 카테고리 List를 따로 생성하여 해당하는 Category의 배열들만 집합시켜 정렬하는 함수입니다.
     const getCategoryList = (menu) =>{
         const categoryTotal = [];
         menu.map((list)=>{
@@ -123,7 +125,7 @@ const Menu = () =>{
                 <div className="CateGoryBtn" onClick={onCategoryState}>{ onCategory ? "전체 보기" : "카테고리 별로 보기" }</div>
             </div>
             { menuList.length === 0 
-            ? <div>로딩중</div> 
+            ? <LoadingSpinner />
             : <div className="main">
                 <div className= "body">
                     {onCategory
