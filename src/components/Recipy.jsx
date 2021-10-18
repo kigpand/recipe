@@ -1,16 +1,22 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import TIMEICON from '../imgs/time.png';
+import KCALICON from '../imgs/kcal.png';
+import SERVINGICON from '../imgs/serving.png';
+import PICKICON from '../imgs/check_full.png';
 
 const RecipyWrapper = styled.div`
 
-    width: 100%;
-    height: 100vh;
+    width: 500px;
+    height: 100%;
 
-    .main{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+    .recipyMain{
+        overflow-x: hidden;
+        overflow-y: scroll;
+        width: 100%;
+        height: 100%;
+        background-color: white;
 
         .img{
             width: 500px;
@@ -40,9 +46,11 @@ const RecipyWrapper = styled.div`
                 justify-content: center;
 
                 .subContent{
-                    text-align: center;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
                     padding: 1rem;
-                    width: 200px;
+                    width: 300px;
                     border: 1px solid lightgray;
                 }
             }
@@ -73,7 +81,13 @@ const RecipyWrapper = styled.div`
             }
 
             .listItem{
+                display: flex;
+                align-items: center;
                 margin-bottom: 1rem;
+
+                span{
+                    margin-right: 0.3rem;
+                }
             }
         }
     }
@@ -101,28 +115,38 @@ const Recipy = ({ id }) =>{
         <RecipyWrapper>
             { loading 
             ? <div>로딩중</div>
-            : <div className="main">
+            : <div className="recipyMain">
                 <img src={recipy.picture} alt="사진" className="img" />
                 <div className="info">
                     <div className="infoTitle">{recipy.name}</div>
                     <p className="infoContent">{recipy.description}</p>
                     <div className="infoSub">
-                        <div className="subContent">{recipy.cookingTime}분 | {recipy.servings}인분 | {recipy.kcal}kcal</div>
+                        <div className="subContent">
+                            <img src={TIMEICON} alt="아이콘" className="subContentIcon"/>{recipy.cookingTime}분 | 
+                            <img src={SERVINGICON} alt="아이콘" className="subContentIcon"/>{recipy.servings}인분 | 
+                            <img src={KCALICON} alt="아이콘" className="subContentIcon"/>{recipy.kcal}kcal
+                        </div>
                     </div>
                 </div>
                 <div className="recipySub">
                     <div className="recipySubTitle">재료</div>
                     <div className="recipySubList">
-                        { recipy.ingredients.map((ingredient)=>{
-                            return <div className="listItem">{ingredient}</div>
+                        { recipy.ingredients.map((ingredient, i)=>{
+                            return (
+                                <div key={i} className="listItem">
+                                    <span className="icon"><img src={PICKICON} alt="아이콘" /></span>{ingredient}
+                                </div>);
                         })}
                     </div>
                 </div>
                 <div className="recipySub">
                     <div className="recipySubTitle">양념장</div>
                     <div className="recipySubList">
-                        { recipy.spices.map((spice)=>{
-                            return <div className="listItem">{spice}</div>
+                        { recipy.spices.map((spice, i)=>{
+                            return (
+                                <div key={i} className="listItem">
+                                    <span className="icon"><img src={PICKICON} alt="아이콘" /></span>{spice}
+                                </div>);
                         })}
                     </div>
                 </div>
@@ -131,7 +155,7 @@ const Recipy = ({ id }) =>{
                     <div className="recipySubList">
                         { recipy.cookingSteps.map((step, i)=>{
                             return (
-                                <div>
+                                <div key={i}>
                                     <div className="listNum">{i + 1}</div>
                                     <div className="listItem">{step}</div>
                                 </div>)

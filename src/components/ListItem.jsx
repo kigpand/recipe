@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-
+import TIMEICON from '../imgs/time_gray.png';
+import EYEICON from '../imgs/eye.png';
 
 const ItemWrapper = styled.div`
     display: flex;
@@ -41,6 +42,17 @@ const ItemWrapper = styled.div`
             margin-top: 2rem;
             display: flex;
 
+            .cookingTime,
+            .kcal{
+                color: gray;
+                display: flex;
+                align-items: center;
+
+                img{
+                    margin-right: 0.3rem;
+                }
+            }
+
             .kcal{
                 margin-left: 1rem;
             }
@@ -60,8 +72,8 @@ const ListItem = ({ list, onRecipeState }) =>{
                 <div className="info">
                     <div className="name">{list.name}</div>
                     <div className="sub">
-                        <div className="cookingTime">{list.cookingTime}</div>
-                        <div className="kcal">{list.kcal}</div>
+                        <div className="cookingTime"><img src={TIMEICON} alt="아이콘" />{list.cookingTime}분</div>
+                        <div className="kcal"><img src={EYEICON} alt="아이콘" />{list.kcal}</div>
                     </div>
                 </div>
             </div>

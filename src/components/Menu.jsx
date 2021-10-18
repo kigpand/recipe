@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import Category from './Category';
 import MenuList from './MenuList';
 import Recipy from './Recipy';
 
@@ -9,31 +10,50 @@ const MenuWrapper = styled.div`
     height: 100vh;
     position: relative;
 
+    .recipe{
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        background-color: rgba(0, 0, 0, 0.4);
+        top: 0;
+        left: 0;
+        display: flex;
+        justify-content: center;
+
+        &:hover{
+            cursor: pointer;
+        }
+    }
+
     .title{
         width: 100%;
         height: 200px;
         background-color: yellow;
         font-weight: bold;
         font-size: 1.5rem;
+        position: relative;
+
+        .CateGoryBtn{
+            font-size: 0.8rem;
+            padding: 0.5rem;
+            border: 1px solid gray;
+            border-radius: 8px;
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+
+            &:hover{
+                cursor: pointer;
+                background-color: lightgray;
+            }
+        }
     }
 
     .main{
         width: 100%;
         height: 700px;
         overflow-y: auto;
-
-        .recipe{
-            width: 100%;
-            height: 100vh;
-            position: absolute;
-            background-color: rgba(0, 0, 0, 0.4);
-            top: 0;
-            left: 0;
-
-            &:hover{
-                cursor: pointer;
-            }
-        }
 
         .body{
             margin-top: 1rem;
@@ -45,6 +65,30 @@ const Menu = () =>{
     const [onCategory, setOnCategory] = useState(false);
     const [onRecipe, setOnRecipe] = useState({ state: false, id: null });
     const [menuList, setMenuList] = useState([]);
+    const [categoryList, setCategoryList] = useState([]);
+
+    const ascending = (a, b) =>{
+        return a.name < b.name ? -1 : (a.name === b.name) ? 0 : 1;
+    }
+
+    const getCategoryList = (menu) =>{
+        const categoryTotal = [];
+        menu.map((list)=>{
+            const result = categoryTotal.find((category) => category.categoryTitle === list.category);
+            if(result === undefined){
+                console.log("테스트")
+                const categoryArray = menu.filter((category) => category.category === list.category);
+                categoryTotal.push({ categoryTitle: list.category, categoryArray: categoryArray });
+            }
+        });
+
+        categoryTotal.map((lists)=>{
+            lists.categoryArray.sort(ascending);
+            return lists;
+        });
+        
+        setCategoryList([...categoryTotal]);
+    }
 
     useEffect(()=>{
         axios({
@@ -53,6 +97,7 @@ const Menu = () =>{
             headers: { 'Content-Type': 'application/json' },
           }).then((e)=>{
               setMenuList(e.data);
+              getCategoryList(e.data);
           }).catch((err)=>{
               console.log(err);
           })
@@ -72,14 +117,17 @@ const Menu = () =>{
 
     return (
         <MenuWrapper>
-            <div className = "title">맛있는 요리</div>
+            { onRecipe.state && <div className="recipe" onClick={onCloseRecipe}><Recipy id={onRecipe.id} /></div>}
+            <div className = "title">
+                맛있는 요리
+                <div className="CateGoryBtn" onClick={onCategoryState}>{ onCategory ? "전체 보기" : "카테고리 별로 보기" }</div>
+            </div>
             { menuList.length === 0 
             ? <div>로딩중</div> 
             : <div className="main">
-                { onRecipe.state && <div className="recipe" onClick={onCloseRecipe}><Recipy id={onRecipe.id} /></div>}
                 <div className= "body">
                     {onCategory
-                        ? <div>카테고리별로 지정</div>
+                        ? <Category categoryList={categoryList} onRecipeState={onRecipeState}/>
                         : <MenuList menuList={menuList} onRecipeState={onRecipeState}/>
                     }
                 </div>
